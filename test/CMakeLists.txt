@@ -1,0 +1,8 @@
+CMAKE_MINIMUM_REQUIRED( VERSION 3.0)
+
+file(GLOB GAREST_SOURCES "*.cpp")
+set(GAREST_SOURCES
+        ${GAR_COMMON_SOURCES}
+        ${GAREST_SOURCES})
+
+add_executable(garest ${GAREST_SOURCES})
