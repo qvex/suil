@@ -2,15 +2,23 @@ cmake_minimum_required(VERSION 3.5)
 project(gar CXX C)
 
 # Determine if we should build tests
-option(GAR_BUILD_TESTS "Determines if building tests is enabled or not" ON)
+option(SUIL_BUILD_TESTS "Determines if building tests is enabled or not" ON)
 option(GAR_LOGSOURCE "Determines whether the source of the log should be included in logs" ON)
 option(GAR_OPENSSL_ENABLED "Determines if OpenSSL is enabled with this build" ON)
 option(GAR_STATS_ENABLED "Enables tracking of statistics" ON)
 
+if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(SUIL_INSTALL_PREFIX ${CMAKE_BINARY_DIR})
+else()
+    set(SUIL_INSTALL_PREFIX ${CMAKE_BINARY_DIR})
+endif()
+
+# Defaukt the build type to debug builds
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif()
 
+# Configure Debug build definitions
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
     if (GAR_LOGSOURCE)
         add_definitions(-DGAR_ENABLE_LOGSRC)
@@ -24,11 +32,8 @@ endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 # Get a list of all common source files
-file(GLOB GAR_COMMON_SOURCES    "common/*.cpp")
-file(GLOB GAR_GAR_SOURCESC      "gar/*.c")
-file(GLOB GAR_GAR_SOURCESCXX    "gar/*cpp")
-set(GAR_GAR_SOURCES             ${GAR_GAR_SOURCESCXX} ${GAR_GAR_SOURCESC})
-file(GLOB GAR_GAP_SOURCES       "gap/*cpp")
+file(GLOB SUIL_COMMON_SOURCES    "common/*.cpp")
+file(GLOB GAR_SOURCES           "gar/*.cpp" "gar/*.c")
 
 # Dependency on boost
 find_package(Boost 1.60 REQUIRED COMPONENTS system date_time thread regex)
@@ -53,8 +58,10 @@ endif()
 
 include_directories(common gar gap)
 
-if (GAR_BUILD_TESTS)
+if (SUIL_BUILD_TESTS)
     add_subdirectory(lib/googletest)
     add_subdirectory(test)
 endif()
+
+add_subdirectory(gap)
 add_subdirectory(suil)
