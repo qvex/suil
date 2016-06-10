@@ -1,0 +1,21 @@
+{
+	"app" : {
+		"name" : "Echo API",
+		"ssl" : {
+			"enable" : false,
+			"sslcert" : ""
+		},
+		"admin" : "Carter Mbotho, carter@suilteam.io",
+		"workingDir" : ""
+	},
+	"module" : {
+		"soname" : "echo.so",
+		"prefix" : "./",
+		"main" : "App_main",
+		"exit" :  "App_exit"
+	},
+	"server" : {
+		"timeout" : 5,
+		"port" : 1080
+	}
+}
