@@ -5,7 +5,7 @@
 #ifndef GAR_APP_PRIV_H
 #define GAR_APP_PRIV_H
 
-#include "server_options.h"
+#include "server_config.h"
 #include "middleware_pipeline.h"
 #include "middleware_pipeline_priv.h"
 #include "resource_handler.h"
@@ -18,13 +18,11 @@ namespace gap {
         typedef std::shared_ptr<AppPriv> Ptr;
         AppPriv();
         MiddlewarePipeline& nextMiddlewareFactory(MiddlewareFactory::Ptr factory);
-        ServerOptions& serverOptions();
         MiddlewarePipelinePriv::Ptr middlewarePipeline();
         ResourceHandlerPriv::Ptr resourceHandler();
         void setResourceHandler(ResourceHandler::Ptr handler);
     private:
         MiddlewarePipeline        mwPipeline_;
-        ServerOptions             serverOptions_;
         ResourceHandlerPriv::Ptr  resourceHandler_;
     };
 }

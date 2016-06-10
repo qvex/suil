@@ -42,6 +42,6 @@ namespace gap {
     // https://github.com/dccarter/crow/blob/master/include/ci_map.h
     //--------------------------------------------------------------------
 
-#define GAP_assert(cond, fmt, ...) if (!cond) printf(fmt "\n", ## __VA_ARGS__); assert(cond)
+#define GAP_assert(cond, fmt, ...) if (!(cond)) printf(fmt "\n", ## __VA_ARGS__); assert(cond)
 }
 #endif //GAR_UTIL_H

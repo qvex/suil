@@ -17,7 +17,9 @@ namespace gap {
     void App::setResourceHandler(ResourceHandler::Ptr handler) {
         priv_->setResourceHandler(handler);
     }
-    std::shared_ptr<AppPriv> App::priv() const {
+
+    AppPriv::Ptr App::priv() const {
         return priv_;
     }
+
 }

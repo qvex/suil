@@ -11,13 +11,15 @@
 namespace gap {
 
     class AppPriv;
-    class App {
+    class App : public std::enable_shared_from_this<App> {
     public:
+        typedef std::shared_ptr<App> Ptr;
         App();
         MiddlewarePipeline& nextMiddlewareFactory(MiddlewareFactory::Ptr factory);
         void setResourceHandler(ResourceHandler::Ptr handler);
         std::shared_ptr<AppPriv> priv() const;
     private:
+        friend class AppPriv;
         std::shared_ptr<AppPriv>   priv_;
     };
 }

@@ -6,6 +6,9 @@ set(GAREST_SOURCES
         ${GAR_SOURCES}
         ${GAREST_SOURCES})
 
+
+include_directories(${CMAKE_SOURCE_DIR}/lib/googletest/googletest/include)
+
 add_executable(garest ${GAREST_SOURCES})
 target_link_libraries(garest
         ${Boost_LIBRARIES}

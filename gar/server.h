@@ -9,26 +9,32 @@
 #include "util.h"
 #include "ioservice_pool.h"
 #include "session.h"
-#include "server_options.h"
+#include "server_config.h"
 #include "middleware_pipeline_priv.h"
 #include "resource_handler_priv.h"
 
 namespace gar {
     using boost::asio::ip::tcp;
 
-    template <typename Adaptor>
     class Server {
     public:
+        typedef std::shared_ptr<Server> Ptr;
+        virtual void run() =0;
+        virtual void stop() = 0;
+    };
 
-        Server(gap::ServerOptions& options,
+    template <typename Adaptor>
+    class ServerImpl : public Server{
+    public:
+        ServerImpl(gap::ServerConfig& config,
                IoServicePool::Ptr pool,
                gap::MiddlewarePipelinePriv::Ptr mwPipeline,
                gap::ResourceHandlerPriv::Ptr resourceHandler)
-            : options_(options),
+            : config(config),
               ioServicePool_(pool),
               ioService_(pool->reserved()),
               acceptor_(*pool->reserved(),
-                        tcp::endpoint(boost::asio::ip::address::from_string(options.bindAddress), options.port)),
+                        tcp::endpoint(boost::asio::ip::address::from_string(config.bindAddress), config.port)),
               signals_{*pool->reserved(), SIGINT, SIGTERM},
               stats_(Stats::Ptr(new Stats)),
               mwPipeline_(mwPipeline),
@@ -37,7 +43,7 @@ namespace gar {
             memset(stats_.get(), 0, sizeof(Stats));
         }
 
-        void run() {
+        virtual void run() {
             uint concurrency = ioServicePool_->size();
             timerQueuePool_.reserve(concurrency);
             getCachedDateStrPool_.reserve(concurrency);
@@ -81,21 +87,19 @@ namespace gar {
                 stop();
             });
 
-            GAP_Info("%s server started bound to local port %u\n",
-                     options_.serverName.c_str(), options_.port);
-
             // Start accepting connection
             accept();
 
-            std::thread t([this]{
+            serverThread_ = new std::thread([this]{
                ioService_->run();
                 // Waits until stopped
-                GAP_Info("%s exiting\n", options_.serverName.c_str());
+                GAP_Info("%s exiting\n", config.serverName.c_str());
             });
-            t.join();
+            GAP_Info("%s server started on thread (%p) to local port %u\n",
+                     config.serverName.c_str(), serverThread_, config.port);
         }
 
-        void stop() {
+        virtual void stop() {
             GAP_Dbg("[this:%p] Server exiting\n", this);
             GAP_Dbg("Stats: received=%uB sent=%uB totalConnections=%u\n",
                     unsigned(stats_->receivedBytes),
@@ -103,6 +107,7 @@ namespace gar {
                     unsigned(stats_->totalConnections));
             ioServicePool_->stop();
             ioService_->stop();
+            serverThread_->join();
         }
 
     private:
@@ -134,9 +139,13 @@ namespace gar {
         tcp::acceptor                               acceptor_;
         boost::asio::signal_set                     signals_;
         Stats::Ptr                                  stats_;
-        gap::ServerOptions&                         options_;
+        gap::ServerConfig&                          config;
         gap::MiddlewarePipelinePriv::Ptr            mwPipeline_;
-        gap::ResourceHandlerPriv::Ptr                   resourceHandler_;
+        gap::ResourceHandlerPriv::Ptr               resourceHandler_;
+        std::thread                                 *serverThread_;
     };
+
+    typedef ServerImpl<SslSocketAdaptor>     SslSocketServer;
+    typedef ServerImpl<SocketAdaptor>        SocketServer;
 }
 #endif //GAR_SERVER_H

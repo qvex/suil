@@ -12,4 +12,5 @@ target_link_libraries(suil
         ${Boost_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
         ${OPENSSL_LIBRARIES}
-        gap)
+        gap
+        dl)
