@@ -8,10 +8,10 @@
 		"admin" : "Carter Mbotho, carter@suilteam.io",
 		"workingDir" : ""
 	},
-	"module" : {
-		"soname" : "echo.so",
+	"executable" : {
+		"filename" : "echo.so",
 		"prefix" : "./",
-		"main" : "App_main",
+		"create" : "App_main",
 		"exit" :  "App_exit"
 	},
 	"server" : {
