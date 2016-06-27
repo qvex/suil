@@ -33,3 +33,5 @@
 # IDE genereted files
 /.idea
 /build
+/bin
+bin
