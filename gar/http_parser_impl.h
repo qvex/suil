@@ -145,7 +145,7 @@ namespace gar {
         }
 
         gap::HttpRequest toRequest() const {
-            return gap::HttpRequest{(gap::HttpMethod)parser_->method,
+            return gap::HttpRequest{(gap::HttpMethod)(0x1 << parser_->method),
                                     std::move(rawUrl_),
                                     std::move(url_),
                                     std::move(urlParams_),

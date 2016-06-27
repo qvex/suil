@@ -5,6 +5,7 @@
 #ifndef GAR_LOG_H
 #define GAR_LOG_H
 
+#include<stdarg.h>
 #include <memory>
 #include <ctime>
 #include <boost/noncopyable.hpp>
@@ -20,6 +21,17 @@ namespace gap {
 
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
+    enum ConsoleColor {
+        BLACK = 0,
+        RED,
+        GREEN,
+        YELLOW,
+        BLUE,
+        MAGENTA,
+        CYAN,
+        WHITE,
+        RESET
+    };
 
     enum class LogLevel {
         TRACE,
@@ -74,6 +86,30 @@ namespace gap {
             instance()->getLogHandlerRef()->log(level, std::move(logMsg));
         }
 
+        static void console(FILE *fp, const ConsoleColor color, const char* tag, const char *fmt, ...) {
+            static const char *colors[] = {
+                    "\033[1m\x1B[30m"
+                    "\033[1m\x1B[31m",
+                    "\033[1m\x1B[32m",
+                    "\033[1m\x1B[33m",
+                    "\033[1m\x1B[34m",
+                    "\033[1m\x1B[35m",
+                    "\033[1m\x1B[36m",
+                    "\033[1m\x1B[37m",
+                    "\x1B[0m"
+            };
+#define COLOR_RESET "\x1B[0m"
+            char   msg[GAP_LOGLINE_MAX_SIZE];
+            int     size = 0;
+            va_list   args;
+            va_start(args, fmt);
+            size = snprintf(msg, GAP_LOGLINE_MAX_SIZE, fmt, args);
+            va_end(args);
+            msg[size] = '\0';
+
+            fprintf(fp, "%s[%s] %s%d\n%s", colors[color], tag, msg, color, COLOR_RESET);
+        }
+
         static Logger::Ptr instance();
 
     private:
@@ -121,8 +157,14 @@ namespace gap {
 #define GAP_Warn(fmt, ...)
 #endif
 
-#define GAP_Err(fmt, ...)   LOG(gap::LogLevel::ERROR, fmt, ## __VA_ARGS__)
-#define GAP_Crit(fmt, ...)  LOG(gap::LogLevel::CRITICAL, fmt, ## __VA_ARGS__)
+#define GAP_Err(fmt, ...)       LOG(gap::LogLevel::ERROR, fmt, ## __VA_ARGS__)
+#define GAP_Crit(fmt, ...)      LOG(gap::LogLevel::CRITICAL, fmt, ## __VA_ARGS__)
+
+#define CONSOLE(fp, tag, color, fmt, ...)   gap::Logger::console(fp, color, tag, fmt, ## __VA_ARGS__)
+#define GAP_Put(tag, fmt, ...)  CONSOLE(stdout, tag, gap::ConsoleColor::WHITE, fmt, ## __VA_ARGS__)
+#define GAP_Perr(tag, fmt, ...) CONSOLE(stderr, tag, gap::ConsoleColor::RED, "error:" fmt, ## __VA_ARGS__)
+#define GAP_Pwrn(tag, fmt, ...) CONSOLE(stdout, tag, gap::ConsoleColor::YELLOW, "warning:" fmt, ## __VA_ARGS__)
+#define GAP_Pinf(tag, fmt, ...) CONSOLE(stdout, tag, gap::ConsoleColor::CYAN, fmt, ## __VA_ARGS__)
 
 }
 #endif //GAR_LOG_H

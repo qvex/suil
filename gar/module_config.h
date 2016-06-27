@@ -10,9 +10,9 @@
 namespace gar {
 
     struct ModuleConfig {
-        std::string     soname{};
-        std::string     main{};
-        std::string     exit{};
+        std::string     soname{""};
+        std::string     main{""};
+        std::string     exit{""};
         std::string     prefix{""};
         static ModuleConfig fromJson(const gap::json::rvalue& configJson);
     };

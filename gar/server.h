@@ -21,6 +21,7 @@ namespace gar {
         typedef std::shared_ptr<Server> Ptr;
         virtual void run() =0;
         virtual void stop() = 0;
+        virtual void wait() = 0;
     };
 
     template <typename Adaptor>
@@ -30,7 +31,7 @@ namespace gar {
                IoServicePool::Ptr pool,
                gap::MiddlewarePipelinePriv::Ptr mwPipeline,
                gap::ResourceHandlerPriv::Ptr resourceHandler)
-            : config(config),
+            : config_(config),
               ioServicePool_(pool),
               ioService_(pool->reserved()),
               acceptor_(*pool->reserved(),
@@ -51,29 +52,9 @@ namespace gar {
             std::future<void> fVoid;
 
             for (uint i =0; i < concurrency; i++) {
-                auto last = std::chrono::steady_clock::now();
-
-                std::string dateStr;
-                auto updateDateStrFn = [&] {
-                    auto lastTime = time(0);
-                    tm lastTm;
-
-                    gmtime_r(&lastTime, &lastTm);
-                    dateStr.resize(100);
-                    size_t ndateStr = strftime(&dateStr[0], 99, "%a, %d %b %Y %H:%M:%s GMT", &lastTm);
-                    dateStr.reserve(ndateStr);
-                };
-
-                updateDateStrFn();
-                ServicePtr service = ioServicePool_->select(i);
-                auto updateDateFn = [&]() -> std::string {
-                    if (std::chrono::steady_clock::now() - last > std::chrono::seconds(1)) {
-                        last = std::chrono::steady_clock::now();
-                        updateDateStrFn();
-                    }
-                    return dateStr;
-                };
-                getCachedDateStrPool_.emplace(service.get(), updateDateFn);
+                ServicePtr service = IoServicePool::instance()->select(i);
+                CachedDateStr cachedDateStr;
+                getCachedDateStrPool_.emplace(service.get(), std::move(cachedDateStr));
 
                 TimerQueue::Ptr timerQueue(new TimerQueue(service.get()));
                 timerQueuePool_.emplace(service.get(), timerQueue);
@@ -93,29 +74,45 @@ namespace gar {
             serverThread_ = new std::thread([this]{
                ioService_->run();
                 // Waits until stopped
-                GAP_Info("%s exiting\n", config.serverName.c_str());
+                GAP_Info("%s exiting\n", config_.serverName.c_str());
             });
             GAP_Info("%s server started on thread (%p) to local port %u\n",
-                     config.serverName.c_str(), serverThread_, config.port);
+                     config_.serverName.c_str(), serverThread_, config_.port);
         }
 
         virtual void stop() {
-            GAP_Dbg("[this:%p] Server exiting\n", this);
-            GAP_Dbg("Stats: received=%uB sent=%uB totalConnections=%u\n",
+            GAP_Info("[this:%p] Server exiting\n", this);
+            GAP_Info("Stats: received=%uB sent=%uB totalConnections=%u\n",
                     unsigned(stats_->receivedBytes),
                     unsigned(stats_->sentBytes),
                     unsigned(stats_->totalConnections));
             ioServicePool_->stop();
             ioService_->stop();
-            serverThread_->join();
         }
+
+        virtual void wait() {
+            if (serverThread_ && serverThread_->joinable()){
+                serverThread_->join();
+            }
+        }
+
 
     private:
 
         void accept() {
             ServicePtr is = ioServicePool_->schedule();
             TimerQueue::Ptr tq = timerQueuePool_.find(is.get())->second;
-            auto sess = new Session<Adaptor>(is, nullptr, stats_, tq, mwPipeline_, resourceHandler_);
+            CachedDateStr& cachedDateStr = getCachedDateStrPool_.find(is.get())->second;
+
+            auto sess = new Session<Adaptor>(is,
+                                             nullptr,
+                                             config_,
+                                             cachedDateStr,
+                                             stats_,
+                                             tq,
+                                             mwPipeline_,
+                                             resourceHandler_);
+
             // TODO: Correctly initialize Session
             acceptor_.async_accept(sess->adaptor().rawSocket(),
             [this, sess, is](Boost_Err err){
@@ -135,17 +132,20 @@ namespace gar {
         ServicePtr                                  ioService_;
         IoServicePool::Ptr                          ioServicePool_;
         IosKeyedMap<TimerQueue::Ptr>                timerQueuePool_;
-        IosKeyedMap<std::function<std::string()>>   getCachedDateStrPool_;
+        IosKeyedMap<CachedDateStr>                  getCachedDateStrPool_;
         tcp::acceptor                               acceptor_;
         boost::asio::signal_set                     signals_;
         Stats::Ptr                                  stats_;
-        gap::ServerConfig&                          config;
+        gap::ServerConfig&                          config_;
         gap::MiddlewarePipelinePriv::Ptr            mwPipeline_;
         gap::ResourceHandlerPriv::Ptr               resourceHandler_;
         std::thread                                 *serverThread_;
     };
 
+#ifdef  GAR_OPENSSL_ENABLED
     typedef ServerImpl<SslSocketAdaptor>     SslSocketServer;
+#endif
+
     typedef ServerImpl<SocketAdaptor>        SocketServer;
 }
 #endif //GAR_SERVER_H

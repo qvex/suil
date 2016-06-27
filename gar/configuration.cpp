@@ -9,26 +9,26 @@
 namespace gar {
     ModuleConfig ModuleConfig::fromJson(const gap::json::rvalue &configJson) {
         ModuleConfig   config;
-        GAP_assert(configJson.has("server"), "Module configuration missing from the config file");
-        const gap::json::rvalue& moduleJson = configJson["module"];
+        GAP_assert(configJson.has("executable"), "Module configuration missing from the config file");
+        const gap::json::rvalue& moduleJson = configJson["executable"];
 
         // soname required
-        GAP_assert(moduleJson.has("soname"), "The soname of the library implementing the file is required");
-        config.soname = moduleJson["soname"].s();
+        GAP_assert(moduleJson.has("file"), "The soname of the library implementing the file is required");
+        config.soname = moduleJson["file"].s();
 
         if (moduleJson.has("prefix")) {
             config.prefix = moduleJson["prefix"].s();
         }
 
-        if(moduleJson.has("main")) {
-            config.main = moduleJson["main"].s();
+        if(moduleJson.has("create")) {
+            config.main = moduleJson["create"].s();
         }
 
         if (moduleJson.has("exit")) {
             config.exit = moduleJson["exit"].s();
         }
 
-        GAP_Dbg("Module config: soname=%s, prefix=%s, main=%s, exit=%s\n",
+        GAP_Dbg("Module config: filename=%s, prefix=%s, create=%s, exit=%s\n",
                     config.soname.c_str(), config.prefix.c_str(), config.main.c_str(),
                     config.exit.c_str());
 
@@ -89,17 +89,19 @@ namespace gap {
                 config.sslcert = appJson["ssl"]["sslcert"].s();
             }
 
-            if (appJson["ssl"].has("enabled")) {
-                config.enableSsl = appJson["ssl"]["enabled"].b();
+            if (appJson["ssl"].has("enable")) {
+                config.enableSsl = appJson["ssl"]["enable"].b();
             }
         }
 
         if (appJson.has("workingDir")) {
             config.workingDir = appJson["workingDir"].s();
         }
-        GAP_Dbg("App config: name=%s, admin=%s, sslcert=%s enableSsl=%dworkingDir=%s\n",
+        GAP_Dbg("App config: name=%s, admin=%s, sslcert=%s enableSsl=%d workingDir=%s\n",
                     config.name.c_str(), config.administrator.c_str(),
                 config.sslcert.c_str(), config.enableSsl, config.workingDir.c_str());
+
+        return config;
     }
 
     Configuration Configuration::loadFromFile(const std::string& configFile) {
@@ -126,6 +128,10 @@ namespace gap {
 
         ifs.close();
 
+        // Use application name if server name is not explicitly set
+        if (config.serverConfig_.serverName.empty()) {
+            config.serverConfig_.serverName = config.appConfig_.name;
+        }
         return  config;
     }
 

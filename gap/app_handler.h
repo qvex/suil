@@ -17,14 +17,14 @@ namespace gap {
          * when the application has been loaded and this handler has been
          * initialized
          */
-        virtual void onLoaded(App::Ptr app) = 0;
+        virtual void onLoaded(App::Ptr app) {};
 
         /**
          * @brief Called before the application is gracefully unloaded. Will not
          * the called in case of exceptions or unexpected unloads. This gives the application
          * a chance to cleanup
          */
-        virtual void onUnload(App::Ptr app) = 0;
+        virtual void onUnload(App::Ptr app) {};
 
         /**
          * @brief Callback into the application before starting
@@ -40,20 +40,20 @@ namespace gap {
          * connections. The application can now start scheduling work
          * into the execution pool
          */
-        virtual void onStarted(App::Ptr app) = 0;
+        virtual void onStarted(App::Ptr app) {};
 
         /**
          * @brief Called before stopping the application. This tells the application
          * that it will be stopped soon, giving it a chance to clean up after itself.
          */
-        virtual void onStop(App::Ptr app) = 0;
+        virtual void onStop(App::Ptr app) {};
 
         /**
          * @brief Invoked whenever an unhandled exception that maybe from the
          * application is encountered, giving the application a chance to handle
          * the exception.
          */
-        virtual bool onException(App::Ptr app) = 0;
+        virtual bool onException(App::Ptr app) {};
     };
 }
 #endif //GAR_APPHANDLER_H

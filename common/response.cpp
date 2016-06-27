@@ -147,5 +147,14 @@ namespace gap {
         setHeader("Content-Type", "application/json");
         end();
     }
+
+    void HttpResponse::end(int statusCode, const std::string data) {
+        if (getHeaderValue("Content-Type") == "application/json") {
+            statusCode_ = 500;
+        } else {
+            body_ += data;
+            statusCode_ = statusCode;
+        }
+    }
 }
 

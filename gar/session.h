@@ -14,6 +14,7 @@
 #include "middleware_pipeline_priv.h"
 
 #include <boost/algorithm/string/predicate.hpp>
+#include <server_config.h>
 
 namespace gar {
 
@@ -46,6 +47,38 @@ namespace gar {
             {503, "HTTP/1.1 503 Service Unavailable\r\n"},
     };
 
+    class CachedDateStr {
+    public:
+        CachedDateStr()
+            : last_(std::chrono::steady_clock::now())
+        {
+            cached_.reserve(100);
+            update();
+        }
+
+        std::string operator()() {
+            if (std::chrono::steady_clock::now() - last_ > std::chrono::seconds(1)) {
+                last_ = std::chrono::steady_clock::now();
+                update();
+            }
+            return cached_;
+        }
+
+    private:
+        void update() {
+            auto now = time(0);
+            tm nowTm;
+
+            gmtime_r(&now, &nowTm);
+            size_t ndateStr = strftime(&cached_[0], 99, "%a, %d %b %Y %H:%M:%s GMT", &nowTm);
+            cached_.resize(ndateStr);
+        };
+
+    private:
+        std::string                                 cached_;
+        std::chrono::steady_clock::time_point       last_;
+    };
+
     template <typename Adaptor>
     class Session : public HttpParserHandler {
         typedef std::shared_ptr<Session<Adaptor>> SelfPtr;
@@ -53,11 +86,15 @@ namespace gar {
 
         Session(std::shared_ptr<boost::asio::io_service> ioService,
                     typename Adaptor::Context* context,
+                    gap::ServerConfig& serverConfig,
+                    CachedDateStr&      cachedDateStr,
                     Stats::Ptr stats,
                     TimerQueue::Ptr timerQueue,
                     gap::MiddlewarePipelinePriv::Ptr mwPipeline,
                     gap::ResourceHandlerPriv::Ptr   resourceHandler)
                 : adaptor_(ioService, context),
+                  serverConfig_(serverConfig),
+                  cachedDateStr_(cachedDateStr),
                   stats_(stats),
                   reading_(false),
                   writing_(false),
@@ -209,14 +246,15 @@ namespace gar {
             if(!res_.headers().count("server")) {
                 static std::string SERVER_TAG = "Server: ";
                 obuffers_.emplace_back(SERVER_TAG.data(), SERVER_TAG.size());
-                obuffers_.emplace_back(serverName_.data(), serverName_.size());
+                obuffers_.emplace_back(serverConfig_.serverName.data(), serverConfig_.serverName.size());
                 obuffers_.emplace_back(HTTP_CRLF.data(), HTTP_CRLF.size());
             }
 
             if(!res_.headers().count("date")) {
                 static std::string DATE_TAG = "Date: ";
+                std::string dateTimeStr = cachedDateStr_();
                 obuffers_.emplace_back(DATE_TAG.data(), DATE_TAG.size());
-                obuffers_.emplace_back(dateTimeStr_.data(), dateTimeStr_.size());
+                obuffers_.emplace_back(dateTimeStr.data(), dateTimeStr.size());
                 obuffers_.emplace_back(HTTP_CRLF.data(), HTTP_CRLF.size());
             }
 
@@ -343,8 +381,8 @@ namespace gar {
 
         std::string             contentLength_;
         std::string             resBodyCopy_;
-        std::string             serverName_;
-        std::string             dateTimeStr_;
+        gap::ServerConfig&      serverConfig_;
+        CachedDateStr&          cachedDateStr_;
 
         Stats::Ptr              stats_;
         HttpPaser               parser_;

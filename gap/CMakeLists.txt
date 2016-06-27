@@ -12,10 +12,10 @@ set(GAP_INCLUDE_FILES
         ${CMAKE_SOURCE_DIR}/common/query_string.h
         ${CMAKE_SOURCE_DIR}/common/request.h
         ${CMAKE_SOURCE_DIR}/common/response.h
-        ${CMAKE_SOURCE_DIR}/common/server_options.h
         ${CMAKE_SOURCE_DIR}/common/util.h
         app.h
         gap.h
+        app_handler.h
         middleware.h
         middleware_factory.h
         middleware_pipeline.h
@@ -26,6 +26,9 @@ set(GAP_INCLUDE_FILES
         route_params.h
         route_params_parser.h
         trie.h)
+file(GLOB GAP_CMAKE_FILES "${CMAKE_SOURCE_DIR}/cmake/*.cmake")
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
 # Build gap as a static library
 add_library(gap STATIC ${GAP_SOURCES})
@@ -36,3 +39,4 @@ target_link_libraries(gap
 
 INSTALL(TARGETS gap DESTINATION ${SUIL_INSTALL_PREFIX}/lib)
 INSTALL(FILES   ${GAP_INCLUDE_FILES} DESTINATION ${SUIL_INSTALL_PREFIX}/include/gap)
+INSTALL(FILES   ${GAP_CMAKE_FILES} DESTINATION  ${SUIL_INSTALL_PREFIX}/cmake)

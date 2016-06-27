@@ -20,9 +20,9 @@ namespace gap {
         AppConfig&  appConfig();
 
     private:
-        ServerConfig          serverConfig_{};
-        gar::ModuleConfig     moduleConfig_{};
-        AppConfig             appConfig_{};
+        ServerConfig          serverConfig_;
+        gar::ModuleConfig     moduleConfig_;
+        AppConfig             appConfig_;
     };
 }
 #endif //GAR_OPTIONS_H

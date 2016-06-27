@@ -1,16 +1,20 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.0)
 project(gar CXX C)
+
+set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH}:${CMAKE_SOURCE_DIR}/bin")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 # Determine if we should build tests
 option(SUIL_BUILD_TESTS "Determines if building tests is enabled or not" ON)
 option(GAR_LOGSOURCE "Determines whether the source of the log should be included in logs" ON)
 option(GAR_OPENSSL_ENABLED "Determines if OpenSSL is enabled with this build" ON)
 option(GAR_STATS_ENABLED "Enables tracking of statistics" ON)
+option(SUIL_BUILD_EXAMPLES "Enables build of examples" ON)
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(SUIL_INSTALL_PREFIX ${CMAKE_BINARY_DIR})
+    set(SUIL_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/bin)
 else()
-    set(SUIL_INSTALL_PREFIX ${CMAKE_BINARY_DIR})
+    set(SUIL_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/bin)
 endif()
 
 # Defaukt the build type to debug builds
@@ -36,7 +40,7 @@ file(GLOB SUIL_COMMON_SOURCES    "common/*.cpp")
 file(GLOB GAR_SOURCES           "gar/*.cpp" "gar/*.c")
 
 # Dependency on boost
-find_package(Boost 1.60 REQUIRED COMPONENTS system date_time thread regex)
+find_package(Boost 1.60 REQUIRED COMPONENTS system filesystem date_time thread regex)
 if (NOT Boost_FOUND)
     message(FATAL_ERROR "This project has a hard dependency on boost libraries >= 1.60")
 endif()
@@ -58,10 +62,14 @@ endif()
 
 include_directories(common gar gap)
 
+add_subdirectory(gap)
+add_subdirectory(gatls)
+
 if (SUIL_BUILD_TESTS)
     add_subdirectory(lib/googletest)
     add_subdirectory(test)
 endif()
 
-add_subdirectory(gap)
-add_subdirectory(suil)
+if (SUIL_BUILD_EXAMPLES)
+    add_subdirectory(examples/echo)
+endif()

@@ -3,7 +3,6 @@
 //
 
 #include "route_params_parser.h"
-#include "util.h"
 
 namespace gap {
 
@@ -68,7 +67,11 @@ namespace gap {
                 GAP_assert(false, "ERROR: Unreachable code, contact developers");
             }
         }
+        regexStr = "^" + regexStr + "$";
 
+        if (parser_.prefix_.empty() && !ctx_.prefix_.empty()) {
+            parser_.prefix_ = std::move(ctx_.prefix_);
+        }
         parser_.regex_ = std::regex(std::move(regexStr));
         ctx_.release();
 
@@ -115,7 +118,6 @@ namespace gap {
                         ctx_.state_ = '{';
                         parser_.prefix_ = std::move(ctx_.prefix_);
                         parser_.prefix_.pop_back();
-                        printf("Prefix is %s\n", parser_.prefix_.c_str());
                         ctx_.prefix_.clear();
                     } else {
                         ctx_.prefix_ += c;

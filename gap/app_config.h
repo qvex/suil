@@ -11,10 +11,10 @@ namespace gap {
 
     struct AppConfig {
         bool                enableSsl{false};
-        std::string         name{};
-        std::string         administrator{};
-        std::string         sslcert{};
-        std::string         workingDir{};
+        std::string         name{""};
+        std::string         administrator{""};
+        std::string         sslcert{""};
+        std::string         workingDir{""};
         static AppConfig fromJson(const json::rvalue& jsettings);
     };
 }

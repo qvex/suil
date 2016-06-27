@@ -42,13 +42,16 @@ namespace  gar {
 
         GAP_Dbg("App binary(%p) successfully loaded, main=%p\n", handle, mainFn);
 
-        return Gar::Ptr(new Gar(config, handle, mainFn, exitFn));
+        return Gar::Ptr(new Gar(std::move(config), handle, mainFn, exitFn));
     }
 
     void Gar::load() {
-        GAP_assert(appMain_ == nullptr, "Main is unexpectedly not available");
+        // Inilialize IoService pool
+        IoServicePool::init(config_.serverConfig().concurrency);
+
+        GAP_assert(appMain_ != nullptr, "Main is unexpectedly not available");
         appHandler_ = gap::AppHandler::Ptr(appMain_());
-        GAP_assert(appHandler_ == nullptr, "Calling application supplied main returned null pointer");
+        GAP_assert(appHandler_ != nullptr, "Calling application supplied main returned null pointer");
 
         GAP_Dbg("[this:%p] application handler for (%s) successfully loaded\n", this,
                         config_.appConfig().name.c_str());
@@ -134,6 +137,12 @@ namespace  gar {
             GAP_Info("Application module unload\n");
         } else {
             GAP_Err("[this:%p] Cannot close module handle (null)\n", this);
+        }
+    }
+
+    void Gar::waitExit() {
+        if (server_ != nullptr) {
+            server_->wait();
         }
     }
 }

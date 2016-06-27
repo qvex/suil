@@ -9,7 +9,7 @@ namespace gap {
     RouteRule::RouteRule(const std::string route)
         : parser_(RouteParamsParser::compile(route)),
           handler_(nullptr),
-          methods_(1<<HttpMethod::GET),
+          methods_(HttpMethod::GET),
           name_(""),
           path_(route)
     {
@@ -34,8 +34,8 @@ namespace gap {
         r.handler_ = nullptr;
     }
 
-    RouteRule& RouteRule::method(const HttpMethod m) {
-        methods_ |= 1 << m;
+    RouteRule& RouteRule::methods(const HttpMethod m) {
+        methods_ = m;
         return *this;
     }
 
@@ -50,7 +50,7 @@ namespace gap {
     }
 
     bool RouteRule::handle(const HttpRequest& req, HttpResponse& res, const std::string& postfix) {
-        if (handler_ != nullptr && (1<<req.method() & methods_) == 1<<req.method() ) {
+        if (handler_ != nullptr && (req.method() & methods_) == req.method() ) {
             bool status = false;
             // this will parse the rest of the url
             RouteParams params = parser_.build(postfix, status);

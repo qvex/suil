@@ -46,6 +46,7 @@ namespace gap {
         const json::wvalue& jsonValue() const;
         void write(const std::string& bodyPart);
         void end(int statusCode, const json::wvalue& jsonWvalue);
+        void end(int statusCode, const std::string data);
     private:
         int             statusCode_;
         std::string     body_;

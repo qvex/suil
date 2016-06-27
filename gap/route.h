@@ -16,7 +16,7 @@ namespace gap {
         RouteRule(const std::string route);
         RouteRule(RouteRule&& r);
         RouteRule&operator=(RouteRule&& r);
-        RouteRule& method(const HttpMethod m);
+        RouteRule& methods(const HttpMethod m);
         RouteRule& name(const std::string name);
         RouteRule&operator()(RuleHandler h);
         bool handle(const HttpRequest& req, HttpResponse& res, const std::string& postfix);
@@ -25,7 +25,7 @@ namespace gap {
     private:
         RouteParamsParser   parser_;
         std::string         name_;
-        uint32_t            methods_;
+        HttpMethod          methods_;
         RuleHandler         handler_;
         std::string         path_;
     };

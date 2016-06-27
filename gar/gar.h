@@ -26,7 +26,7 @@ namespace  gar {
         void start();
         void stop();
         void unload();
-
+        void waitExit();
         static Gar::Ptr loadApp(const std::string& configFile);
     private:
         Gar(gap::Configuration config, void* handle, AppMain main, AppExit exit);

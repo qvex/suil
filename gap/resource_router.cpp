@@ -3,7 +3,6 @@
 //
 
 #include "resource_router.h"
-#include "util.h"
 #include "log.h"
 
 namespace gap {
@@ -30,7 +29,7 @@ namespace gap {
     void RuleCollection::handle(const HttpRequest& req, HttpResponse& resp) {
         std::string postfix = req.url().substr(prefix_.length());
 
-        GAP_Dbg("[this:%p] handling request [%s:%s]\n", this, prefix_.c_str(), postfix.c_str());
+        GAP_Dbg("[this:%p] %s handling request (%s)\n", this, prefix_.c_str(), postfix.c_str());
 
         for(auto& rule : rules_) {
             if (rule.handle(req, resp, postfix)) {
@@ -57,7 +56,6 @@ namespace gap {
             routes_.add(rule.prefix(), rules);
             GAP_Dbg("[this:%p] created new rule collection for prefix (%s)\n", this, rules->prefix().c_str());
         }
-
         GAP_Dbg("[this:%p] added a new rule (%s) to collection (%s)\n", this, rule.path().c_str(), rules->prefix().c_str());
         return rules->add(std::move(rule));;
     }
@@ -71,6 +69,7 @@ namespace gap {
 
         if (c == nullptr) {
             GAP_Dbg("[this:%p] request not handled, resource not found (%s)\n", this, req.url().c_str());
+            resp.statusCode() = 404;
         }
     }
 }

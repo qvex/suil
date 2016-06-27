@@ -14,7 +14,7 @@ namespace gap {
         uint            timeout{5};
         uint            port;
         uint            concurrency{0};
-        std::string     serverName{};
+        std::string     serverName{""};
         std::string     bindAddress{"127.0.0.1"};
         static ServerConfig fromJson(const json::rvalue& jsettings);
     };

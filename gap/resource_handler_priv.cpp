@@ -9,7 +9,11 @@
 namespace gap {
 
     void ResourceHandlerPriv::setHandler(ResourceHandler::Ptr handler) {
-        handler_ = handler;
+        if (handler_ == nullptr) {
+            handler_ = handler;
+        } else {
+            GAP_Err("[this:%p] resource handler already set (%p)\n", this, handler_.get());
+        }
     }
 
     void ResourceHandlerPriv::handle(const HttpRequest& req, HttpResponse& resp) {
@@ -19,7 +23,7 @@ namespace gap {
             }
         } catch (...) {
             GAP_Dbg("%s: Uncaught exception when executing resource handler\n", __FUNCTION__);
-            resp = HttpResponse(500);
+            resp.statusCode() = 500;
         }
 
         // force completion of request

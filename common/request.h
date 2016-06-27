@@ -12,15 +12,23 @@
 namespace gap {
 
     enum HttpMethod {
-        DELETE,
-        GET,
-        HEAD,
-        POST,
-        PUT,
-        CONNECT,
-        OPTIONS,
-        TRACE
+        DELETE  = 0x1,
+        GET     = 0x2,
+        HEAD    = 0X4,
+        POST    = 0X8,
+        PUT     = 0x10,
+        CONNECT = 0x20,
+        OPTIONS = 0x40,
+        TRACE   = 0x80
     };
+
+    inline HttpMethod operator|(HttpMethod m1, HttpMethod m2) {
+        return static_cast<HttpMethod >(static_cast<int>(m1) | static_cast<int>(m2));
+    }
+
+    inline HttpMethod operator&(HttpMethod m1, HttpMethod m2) {
+        return static_cast<HttpMethod >(static_cast<int>(m1) & static_cast<int>(m2));
+    }
 
     typedef std::unordered_multimap<std::string, std::string, gap::ci_hash, gap::ci_key_eq>   HttpHeaders;
     typedef std::unordered_multimap<std::string, void*, gap::ci_hash, gap::ci_key_eq>         Environment;

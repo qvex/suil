@@ -1,0 +1,21 @@
+{
+  "app" : {
+    "name" : "Echo Example",
+    "ssl" : {
+      "enable" : false,
+      "sslcert" : ""
+    },
+    "admin" : "Carter Mbotho, carter@suilteam.io",
+    "workingDir" : ""
+  },
+  "module" : {
+    "soname" : "echo.gap",
+    "prefix" : "./",
+    "main" : "Echo_main",
+    "exit" :  "Echo_exit"
+  },
+  "server" : {
+    "timeout" : 5,
+    "port" : 1080
+  }
+}

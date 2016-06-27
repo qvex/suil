@@ -30,7 +30,6 @@ namespace gap {
     public:
         RouteRule& route(const std::string path);
         virtual void handle(const HttpRequest& req, HttpResponse& resp);
-
     private:
         Trie<RuleCollection>     routes_;
     };
