@@ -11,9 +11,7 @@ option(GAR_OPENSSL_ENABLED "Determines if OpenSSL is enabled with this build" ON
 option(GAR_STATS_ENABLED "Enables tracking of statistics" ON)
 option(SUIL_BUILD_EXAMPLES "Enables build of examples" ON)
 
-if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(SUIL_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/bin)
-else()
+if (NOT SUIL_INSTALL_PREFIX)
     set(SUIL_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/bin)
 endif()
 
@@ -71,5 +69,5 @@ if (SUIL_BUILD_TESTS)
 endif()
 
 if (SUIL_BUILD_EXAMPLES)
-    add_subdirectory(examples/echo)
+    #add_subdirectory(examples/echo)
 endif()

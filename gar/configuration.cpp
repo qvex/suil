@@ -1,6 +1,8 @@
 //
 // Created by dc on 6/9/16.
 //
+#include <boost/filesystem.hpp>
+
 #include "json.h"
 #include "configuration.h"
 #include "util.h"
@@ -18,6 +20,9 @@ namespace gar {
 
         if (moduleJson.has("prefix")) {
             config.prefix = moduleJson["prefix"].s();
+        }
+        if (config.prefix.empty() || config.prefix.compare("/") == 0) {
+            config.prefix = boost::filesystem::current_path().string();
         }
 
         if(moduleJson.has("create")) {

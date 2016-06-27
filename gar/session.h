@@ -252,9 +252,9 @@ namespace gar {
 
             if(!res_.headers().count("date")) {
                 static std::string DATE_TAG = "Date: ";
-                std::string dateTimeStr = cachedDateStr_();
+                dateTimeStr_ = cachedDateStr_();
                 obuffers_.emplace_back(DATE_TAG.data(), DATE_TAG.size());
-                obuffers_.emplace_back(dateTimeStr.data(), dateTimeStr.size());
+                obuffers_.emplace_back(dateTimeStr_.data(), dateTimeStr_.size());
                 obuffers_.emplace_back(HTTP_CRLF.data(), HTTP_CRLF.size());
             }
 
@@ -381,6 +381,7 @@ namespace gar {
 
         std::string             contentLength_;
         std::string             resBodyCopy_;
+        std::string             dateTimeStr_;
         gap::ServerConfig&      serverConfig_;
         CachedDateStr&          cachedDateStr_;
 

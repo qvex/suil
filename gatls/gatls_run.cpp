@@ -67,7 +67,8 @@ namespace gatls {
             pid_t  pid = getpid();
             // Change working directory
             chdir(options->wdir.c_str());
-            GAP_Put("Gatls", "Running application, pid = %d", pid);
+            GAP_Put("Gatls", "Running application, wdir=%s, pid = %d",
+                    boost::filesystem::current_path().c_str(), pid);
 
             gar::Gar::Ptr appHost = gar::Gar::loadApp(options->config);
             gap::Logger::setLogLevel(options->logLevel);

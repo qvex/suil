@@ -13,4 +13,4 @@ target_link_libraries(gatls
         gap
         dl)
 
-INSTALL(TARGETS gatls DESTINATION ${SUIL_INSTALL_PREFIX}/gatls)
+INSTALL(TARGETS gatls DESTINATION ${SUIL_INSTALL_PREFIX}/bin)

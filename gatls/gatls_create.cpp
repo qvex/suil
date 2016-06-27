@@ -217,7 +217,7 @@ namespace gatls {
         }
 
         // Command line options successfully parsed
-        const std::string proj = createAppOptions.project;
+        const std::string& proj = createAppOptions.project;
         std::string appDir = "./"+ proj;
 
         // create directory if doesn't exist
@@ -249,24 +249,24 @@ namespace gatls {
             return false;
         }
 
-        GAP_Pinf("Gatls", "created app folders ./%s/{src,res}", proj.c_str());
+        GAP_Put("Gatls", "created app folders ./%s/{src,res}", &proj[0]);
 
         // create build configuration
         if (!createCMakeLists(createAppOptions)) {
             return false;
         }
-        GAP_Pinf("Gatls", "created cmake build file. ./%s/CMakeLists.txt", proj.c_str());
+        GAP_Put("Gatls", "created cmake build file. ./%s/CMakeLists.txt", &proj[0]);
 
         if (!createAppSourceFiles(createAppOptions)) {
             return false;
         }
-        GAP_Pinf("Gatls", "created application source files. ./%s/src/{%s.h, %s.cpp, %s_handler.cpp}",
+        GAP_Put("Gatls", "created application source files. ./%s/src/{%s.h, %s.cpp, %s_handler.cpp}",
                proj.c_str(), proj.c_str(), proj.c_str(), proj.c_str());
 
         if (!createAppConfigFile(createAppOptions)) {
             return false;
         }
-        GAP_Pinf("Gatls", "create application config file. ./%s/%s.json", proj.c_str(), proj.c_str());
+        GAP_Pinf("Gatls", "created application config file. ./%s/%s.json", &proj[0], &proj[0]);
 
         return true;
     }

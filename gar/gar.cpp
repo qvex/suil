@@ -22,9 +22,8 @@ namespace  gar {
         gap::Configuration config = gap::Configuration::loadFromFile(configFile);
         GAP_Dbg("Configurations successfully loaded from file (%s)\n", configFile.c_str());
 
-        // try loading the module
-        const char* soname = config.moduleConfig().soname.c_str();
-        void *handle = dlopen(soname, RTLD_LAZY);
+        std::string filename = config.moduleConfig().prefix + "/" + config.moduleConfig().soname;
+        void *handle = dlopen(&filename[0], RTLD_LAZY);
         GAP_assert(handle != nullptr, "Unable to open application binary: %s", dlerror());
         // clear errors if any
 
