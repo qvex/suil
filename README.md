@@ -49,17 +49,18 @@ $ make
 
 * The following options are available to cmake
 ```cmake
-    CMAKE_INSTALL_PREFIX - The directory to install cmake
-    GAR_SSL_ENABLED[ON|OFF] - Build suil with SSL support
-    SUIL_BUILD_UNIT_TESTS[ON|OFF] - Build suil unit tests project
-    GAR_LOGSOURCE[ON|OFF] - Show log source (filename and line number) in logs
-    GAR_STATS_ENABLED[ON|OFF] - Enable capturing statistics for each gap running on GAR
+    CMAKE_INSTALL_PREFIX            The directory to install cmake
+    GAR_SSL_ENABLED[ON|OFF]         Build suil with SSL support
+    SUIL_BUILD_UNIT_TESTS[ON|OFF]   Build suil unit tests project
+    GAR_LOGSOURCE[ON|OFF]           Show log source (filename and line number) in logs
+    GAR_STATS_ENABLED[ON|OFF]       Enable capturing statistics for each gap running on GAR
 ```
 * Finally install the application package. The application will be installed on the specified install prefix.
 ```
 $ sudo make install
 ```
-This will install the library `libgap.a`, all the header files required to build a gap and the `gatls` CLI tool.
+This will install the library `libgap.a`, all the header files required to build a `gap` and the `gatls` CLI tool.
+
 
 ## `gatls` - gap tools
 Gliese application tool is a cli component of suil used to manipulate gliese applications (gaps). The tool can be used to create  a project template which implements a simple hello gap.
