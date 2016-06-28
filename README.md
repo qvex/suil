@@ -29,7 +29,7 @@ Gliese application tool is a cli component of suil used to manipulate gliese app
 
 #### `gatls create app`
 
-This command will create a new project called app which is ready to be servered. The created project has an application configuration (runtime config), C++ source files and CMakeLists.txt file for building the application. The following options are available
+This command will create a new project called `app` which is ready to be built and servered. The created project has an application configuration (runtime config), C++ source files and a `CMakeLists.txt` file for building the application. The following options are available
 ```
   --no-ssl : application does not use ssl
   --name=[name] : the name to be given to the server
