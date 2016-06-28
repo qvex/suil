@@ -51,4 +51,4 @@ By default gatls and the generated CMakeLists.txt recognize the following argume
 ```
 
 #### `gatls run`
-`gatls run` is used to run the a gap using a debug gap runner (gar) embedded onto gatls. The directory on which this is being called should be a gap directory. Running a gap this way assumes the application has already been built using `gatls build`. The instance can be stopped by `Ctrl-C`.
+`gatls run` is used to run a gap using a debug gap runner (gar) embedded onto gatls. The directory on which this is being called should be a gap directory. Running a gap this way assumes the application has already been built using `gatls build`. The instance can be stopped by `Ctrl-C`.
