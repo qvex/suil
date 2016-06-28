@@ -1,6 +1,6 @@
 # suil
-suil is C++ RESTful Web API server and framework. The framework was inspired by project crow with most of the socket
-housekeeping implementation adopted from the project.
+[suil](https://github.com/suilteam/suil/wiki/suil) is a lightweight C++ RESTful Web API framwork and server developed for `*nix` operating system.
+
 ```C++
 #include <gap/gap.h>
 
@@ -23,6 +23,14 @@ void EchoHandler::onStart(gap::Gap::Ptr app) {
     });
 }
 ```
+
+###### Requirements
+There is a [section](https://github.com/suilteam/suil/wiki/suil) on the wiki on how to install all the required build dependencies on raspberry pi, the same procedure applies and has been tested on Ubuntu. The following are the minimal requirements for a sucessful build.
+* [`Cmake`](https://cmake.org/)`, cmake >= 3.0`
+* [`Boost Libaries`](http://www.boost.org/doc/libs/)`, >= 1.60`
+* `gnu make, gcc toolchain with support for c++11`
+* `libssl (Only required when building with SSL support)`
+* `pthreads`
 
 ## `gatls` - gap tools
 Gliese application tool is a cli component of suil used to manipulate gliese applications (gaps). The tool can be used to create  a project template which implements a simple hello gap.
