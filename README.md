@@ -24,13 +24,42 @@ void EchoHandler::onStart(gap::Gap::Ptr app) {
 }
 ```
 
-###### Requirements
+## Requirements
 There is a [section](https://github.com/suilteam/suil/wiki/suil) on the wiki on how to install all the required build dependencies on raspberry pi, the same procedure applies and has been tested on Ubuntu. The following are the minimal requirements for a sucessful build.
 * [`Cmake`](https://cmake.org/)`, cmake >= 3.0`
 * [`Boost Libaries`](http://www.boost.org/doc/libs/)`, >= 1.60`
 * `gnu make, gcc toolchain with support for c++11`
 * `libssl (Only required when building with SSL support)`
 * `pthreads`
+
+## Building `suil`
+* Start by cloning suil from the repo
+```bash
+$ git clone https://github.com/suilteam/suil.git
+```
+
+* Run cmake to generate all the files required to build suil, followed by make commond as follows
+```bash
+$ cd suil
+$ mkdir build
+$ cd build
+$ cmake .. -DCMAKE_INSTAL_PREFIX=/usr/local -DCMAKE_BUILD_TYPE=Debug -DSUIL_BUILD_UNIT_TESTS=OFF
+$ make
+```
+
+* The following options are available to cmake
+```cmake
+    CMAKE_INSTALL_PREFIX - The directory to install cmake
+    GAR_SSL_ENABLED[ON|OFF] - Build suil with SSL support
+    SUIL_BUILD_UNIT_TESTS[ON|OFF] - Build suil unit tests project
+    GAR_LOGSOURCE[ON|OFF] - Show log source (filename and line number) in logs
+    GAR_STATS_ENABLED[ON|OFF] - Enable capturing statistics for each gap running on GAR
+```
+* Finally install the application package. The application will be installed on the specified install prefix.
+```
+$ sudo make install
+```
+This will install the library `libgap.a`, all the header files required to build a gap and the `gatls` CLI tool.
 
 ## `gatls` - gap tools
 Gliese application tool is a cli component of suil used to manipulate gliese applications (gaps). The tool can be used to create  a project template which implements a simple hello gap.
