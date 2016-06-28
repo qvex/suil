@@ -40,7 +40,7 @@ This command will create a new project called app which is ready to be servered.
 [dc@suil : / ] cd app
 [dc@suil : / ] gatls build
 ```
-This command will build the project (assuming app is a gap) and create a bin folder which has the gap binary and the runtime configuration file. Gatls build uses cmake under the hood to find dependencies, the functionality of this feature is based on the user not breaking the generated CMakeLists.txt. Gatls build supports parsing arguments to cmake in the form of defines, for example
+This command will build the project (assuming app is a gap) and create a bin folder which has the gap binary and the runtime configuration file. Gatls build uses cmake under the hood to find dependencies, the functionality of this feature is based on the user not breaking the generated CMakeLists.txt. Gatls build supports passing arguments to cmake in the form of defines, for example
 ```bash
 [dc@suil : / ] gatls build -DCMAKE_BUILD_TYPE=Debug
 ```
