@@ -1,7 +1,7 @@
 //
 // Created by dc on 6/7/16.
 //
-
+#include "util.h"
 #include "route_params_parser.h"
 
 namespace gap {
@@ -134,7 +134,6 @@ namespace gap {
     }
 
     void RouteParamsParser::dump() {
-
     }
 
     ParamValue::Type RouteParamsParser::validateType() {

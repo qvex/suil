@@ -11,24 +11,25 @@
 #include <sys/types.h>
 
 namespace gatls {
+
     extern int create(int argc, char *argv[]);
+    extern void showCreateHelp();
     extern int build(int argc, char* argv[]);
+    extern void showBuildHelp();
     extern int clean(int argc, char* argv[]);
+    extern void showCleanHelp();
     extern int run(int argc, char* argv[]);
-    extern int app(int argc, char* argv[]);
+    extern void showRunHelp();
+    extern int remote(int argc, char* argv[]);
+    extern void showRemoteHelp();
+    extern int help(int argc, char* argv[]);
+    extern void showHelp();
+    extern void showVersionInfo();
 
     struct CliCommand {
         const char    *cmd;
         int (*fn)(int, char**);
         void (*help)(void);
-    };
-
-    static const CliCommand cliCmds[] =  {
-            {"create", create, NULL},
-            {"build", build, NULL},
-            {"clean", clean, NULL},
-            {"run", run, NULL},
-            //{"app", app, NULL}
     };
 
     /**

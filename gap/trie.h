@@ -132,7 +132,7 @@ namespace gap {
                 ite = ite->find(entry);
             }
 
-            return ite->content();
+            return ite? ite->content(): nullptr;
         }
 
         ContentPtr lazySearch(const std::string& key, LazySearchCb lazy) {
@@ -169,10 +169,8 @@ namespace gap {
     private:
         void doErase(const std::string& key, std::size_t pos, typename Node::Ptr ite) {
             if (ite != nullptr && key.length() == pos) {
-                if (ite != nullptr) {
-                    ite->setContent(nullptr);
-                }
-            } else {
+                ite->setContent(nullptr);
+            } else if(ite != nullptr){
                 typename Node::Ptr tmp = ite->find(key[pos]);
                 if (tmp != nullptr) {
                     doErase(key, pos + 1, tmp);

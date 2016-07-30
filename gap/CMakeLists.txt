@@ -25,7 +25,8 @@ set(GAP_INCLUDE_FILES
         route.h
         route_params.h
         route_params_parser.h
-        trie.h)
+        trie.h
+        version.h)
 file(GLOB GAP_CMAKE_FILES "${CMAKE_SOURCE_DIR}/cmake/*.cmake")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")

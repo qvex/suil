@@ -68,7 +68,7 @@ namespace  gar {
 
         // application has done it's setup, create the server
         if (config_.appConfig().enableSsl) {
-#ifdef GAR_OPENSSL_ENABLED
+#ifdef SUIL_OPENSSL_ENABLED
             server_ = Server::Ptr(
                     new SslSocketServer(
                                  config_.serverConfig(),

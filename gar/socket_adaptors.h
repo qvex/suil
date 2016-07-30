@@ -63,7 +63,7 @@ namespace gar {
         std::shared_ptr<boost::asio::io_service> ioService_;
     };
 
-#ifdef GAR_OPENSSL_ENABLED
+#ifdef SUIL_OPENSSL_ENABLED
     class SslSocketAdaptor {
     public:
         using Context = boost::asio::ssl::context;

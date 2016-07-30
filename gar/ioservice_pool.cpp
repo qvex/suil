@@ -85,12 +85,9 @@ namespace gar {
     void IoServicePool::init(const uint poolSize = 0) {
         if (inst_ == nullptr) {
             uint concurrency  = poolSize;
-            if (poolSize == 0) {
-                concurrency = boost::thread::hardware_concurrency();
-                // reserve one service to accepting connections
-                if (concurrency > 1) {
-                    concurrency--;
-                }
+            concurrency = boost::thread::hardware_concurrency();
+            if (concurrency > 1) {
+                concurrency--;
             }
 
             inst_ = IoServicePool::Ptr(new IoServicePool(concurrency));

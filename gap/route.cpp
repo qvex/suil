@@ -32,6 +32,7 @@ namespace gap {
         path_ = std::move(r.path_);
         methods_ = r.methods_;
         r.handler_ = nullptr;
+        return *this;
     }
 
     RouteRule& RouteRule::methods(const HttpMethod m) {

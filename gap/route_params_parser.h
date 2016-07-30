@@ -6,6 +6,8 @@
 #define GAR_ROUTE_PARAMS_PARSER_H
 
 #include <regex>
+#include <cassert>
+
 #include "route_params.h"
 
 namespace gap {
@@ -42,7 +44,7 @@ namespace gap {
             bool            active_{false};
             bool            prefixing_{true};
             void            acquire() {
-                assert(active_==false && "ERROR: Route params parser in use");
+                assert(!active_ && "ERROR: Route params parser in use");
                 active_ = true;
                 prefixing_ = true;
                 clear();

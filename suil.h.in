@@ -1,0 +1,11 @@
+#ifndef __SUIL_H__
+#define __SUIL_H__
+
+#define SUIL_MAJOR_VERSION      @SUIL_MAJOR_VERSION@
+#define SUIL_MINOR_VERSION      @SUIL_MINOR_VERSION@
+#define SUIL_PATCH_VERSION      @SUIL_PATCH_VERSION@
+#define SUIL_VERSION_STRING     "@SUIL_VERSION@"
+
+#define SUIL_BUILD_DATE         "@SUIL_BUILD_DATE@"
+
+#endif // __SUIL_VERSION_H__

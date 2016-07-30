@@ -112,7 +112,7 @@ namespace gap {
 
     bool HttpResponse::isAlive() {
         gar::HttpResponseHandlers *h = handlers();
-        if (h && h->isAliveChecker()) {
+        if (h != nullptr && h->isAliveChecker()) {
             return h->isAliveChecker();
         }
         return false;

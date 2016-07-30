@@ -38,10 +38,15 @@ namespace gap {
             return boost::iequals(l, r);
         }
     };
-    //--------------------------------------------------------------------
-    // https://github.com/dccarter/crow/blob/master/include/ci_map.h
-    //--------------------------------------------------------------------
 
 #define GAP_assert(cond, fmt, ...) if (!(cond)) printf(fmt "\n", ## __VA_ARGS__); assert(cond)
+
+#ifdef SUIL_UNIT_TEST_BUILD
+#   define UT_FRIEND_DECLARE(friendName) class friendName
+#   define UT_FRIEND(friendName) friend class friendName
+#else
+#    define UT_FRIEND_DECLARE(friendName)
+#    define UT_FRIEND(friendName)
+#endif
 }
 #endif //GAR_UTIL_H

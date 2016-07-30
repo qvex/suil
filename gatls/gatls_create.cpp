@@ -24,6 +24,12 @@ namespace gatls {
         static bool parse(CreateAppOptions& options, int argc, char *argv[]);
     };
 
+    void showCreateHelp() {
+    }
+
+    void showRemoteHelp() {
+    }
+
     static bool createCMakeLists(const CreateAppOptions& createAppOptions) {
         std::string filename = createAppOptions.project + "/CMakeLists.txt";
         std::ofstream cmakeLists(filename);
@@ -60,7 +66,7 @@ namespace gatls {
         std::string sourceFile = proj + "/src/" + proj + ".cpp";
 
         std::string codePrefix = createAppOptions.project;
-        codePrefix[0] = toupper(codePrefix[0]);
+        codePrefix[0] = (char) toupper(codePrefix[0]);
 
         // Create header file
         {
@@ -146,7 +152,7 @@ namespace gatls {
     static bool createAppConfigFile(const CreateAppOptions& createAppOptions)
     {
         std::string codePrefix = createAppOptions.project;
-        codePrefix[0] = toupper(codePrefix[0]);
+        codePrefix[0] = (char) toupper(codePrefix[0]);
 
         {
             std::string configFile = createAppOptions.project + "/" + createAppOptions.project + ".json";

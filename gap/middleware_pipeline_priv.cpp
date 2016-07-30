@@ -29,7 +29,9 @@ namespace gap {
 
         if (clearCallStack) {
             callAfterHanders(cs, env, req, resp);
+            return false;
         }
+        return true;
     }
 
     void MiddlewarePipelinePriv::callAfterHanders(CallStack& cs,

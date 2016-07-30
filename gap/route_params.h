@@ -5,10 +5,11 @@
 #ifndef GAR_ROUTER_H
 #define GAR_ROUTER_H
 
+#include <unordered_map>
+#include "util.h"
 #include "param_value.h"
-#include "resource_handler.h"
-#include "trie.h"
 
+UT_FRIEND_DECLARE(RouteParamsTest);
 namespace gap {
 
     class RouteParamsParser;
@@ -18,6 +19,7 @@ namespace gap {
 
     private:
         friend class RouteParamsParser;
+        UT_FRIEND(::RouteParamsTest);
         RouteParams();
         void update(const std::string& name, const ParamValue::Type& type, const std::string& value);
         typedef std::unordered_map<std::string, ParamValue> ValuesMap;

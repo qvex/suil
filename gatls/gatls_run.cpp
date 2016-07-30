@@ -16,9 +16,12 @@ namespace gatls {
         static bool parse(RunOptions &opts, int argc, char *argv[]);
     };
 
+    void showRunHelp() {
+    }
+
     bool RunOptions::parse(RunOptions &opts, int argc, char **argv) {
         int arg = 0;
-        int alen = 0;
+        size_t alen = 0;
 
         while (arg < argc) {
             alen = strlen(argv[arg]);
@@ -53,14 +56,20 @@ namespace gatls {
 
         if (!boost::filesystem::exists(opts.config)) {
             std::string tmpConfig = opts.wdir + "/" + opts.config;
-            if (boost::filesystem::exists(tmpConfig)) {
+            if (!boost::filesystem::exists(tmpConfig)) {
                 GAP_Perr("Gatls", " '%s' config file does not exist", tmpConfig.c_str());
                 return false;
+            }
+        } else {
+            boost::filesystem::path p(opts.config);
+            if (p.is_relative()) {
+                opts.config = boost::filesystem::current_path().string() + "/" + opts.config;
             }
         }
 
         return true;
     }
+
     void runGar(void *arg) {
         RunOptions *options = static_cast<RunOptions *>(arg);
         try {

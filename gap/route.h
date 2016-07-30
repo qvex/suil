@@ -10,9 +10,17 @@
 
 namespace gap {
 
+    /**
+     * @brief The binding between a route and a resource on the server. The rule defines,
+     * how the resource can be reached and how to parse the url before handling the request
+     */
     class RouteRule {
         typedef std::function<void(const HttpRequest&, HttpResponse&, RouteParams&)> RuleHandler;
     public:
+        /**
+         * @brief Create a new route rule for the given route the given route
+         * @param route: a string representing the route rule
+         */
         RouteRule(const std::string route);
         RouteRule(RouteRule&& r);
         RouteRule&operator=(RouteRule&& r);

@@ -20,6 +20,11 @@ namespace gatls {
         static bool         parse(BuildOptions& options, int argc, char* argv[]);
     };
 
+    void showBuildHelp() {
+    }
+
+    void showCleanHelp() {
+    }
 
     bool BuildOptions::parse(BuildOptions &options, int argc, char **argv) {
         int         arg = 0;
@@ -64,7 +69,7 @@ namespace gatls {
             return boost::starts_with(opt, "-DGAP_DEV_BINARY_DIR=");
         }) == options.defines.end()) {
             std::string cmakeModulePath = cwd;
-            cmakeModulePath = "-DGAP_DEV_BINARY_DIR=" + cmakeModulePath + "/lib";
+            cmakeModulePath = "-DGAP_DEV_BINARY_DIR=" + cmakeModulePath + "/lib;/usr/local";
             options.defines.push_back(cmakeModulePath);
         }
 

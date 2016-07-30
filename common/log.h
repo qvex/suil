@@ -18,7 +18,6 @@ namespace gap {
 #ifndef GAP_LOGLINE_MAX_SIZE
 #define GAP_LOGLINE_MAX_SIZE    255
 #endif
-
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
     enum ConsoleColor {
@@ -99,6 +98,7 @@ namespace gap {
                     "\033[1m\x1B[37m",
                     "\x1B[0m"
             };
+
 #define COLOR_RESET "\x1B[0m"
             char   msg[GAP_LOGLINE_MAX_SIZE];
             int     size = 0;
@@ -107,6 +107,8 @@ namespace gap {
             msg[size] = '\0';
 
             fprintf(fp, "%s[%s] %s%s\n", colors[color], tag, msg, COLOR_RESET);
+#undef COLOR_RESET
+
         }
 
         static Logger::Ptr instance();
@@ -132,7 +134,7 @@ namespace gap {
         static Logger::Ptr  inst_;
     };
 
-#ifdef GAR_ENABLE_LOGSRC
+#ifdef SUIL_ENABLE_LOGSRC
 #define GAR_LOGSRC_FMT  "%s<%s:%d>: "
 #define GAR_LOGSRC_ARGS ,"" ,__FILENAME__, __LINE__
 #else
@@ -144,7 +146,7 @@ namespace gap {
 #define LOG(lvl, fmt, ...)  if (lvl >= gap::Logger::getLogLevel()) \
     gap::Logger::log(lvl, GAR_LOGSRC_FMT fmt GAR_LOGSRC_ARGS, ## __VA_ARGS__)
 
-#ifdef GAR_DEBUG
+#ifdef SUIL_DEBUG
 #define GAP_Trace(fmt, ...) LOG(gap::LogLevel::TRACE, fmt, ## __VA_ARGS__)
 #define GAP_Dbg(fmt, ...)   LOG(gap::LogLevel::DEBUG, fmt, ## __VA_ARGS__)
 #define GAP_Info(fmt, ...)  LOG(gap::LogLevel::INFO,  fmt, ## __VA_ARGS__)

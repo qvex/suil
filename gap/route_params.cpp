@@ -21,6 +21,7 @@ namespace gap {
     }
 
     void RouteParams::update(const std::string& name, const ParamValue::Type& type, const std::string& value) {
+        values_.erase(name);
         values_.emplace(name, ParamValue(type, value));
     }
 }

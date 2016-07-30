@@ -18,7 +18,7 @@ namespace gar {
         std::atomic_uint        receivedBytes;
     };
 
-#if defined(GAR_DEBUG) && defined(GAR_STATS_ENABLED)
+#if defined(SUIL_DEBUG) && defined(GAR_STATS_ENABLED)
 #define GAR_STATS_INCR(stats, field)   stats->field++
 #define GAR_STATS_DECR(stats, field)   stats->field--
 #define GAR_STATS_ADD(stats, field, addend) stats->field += addend
